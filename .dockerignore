@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+env/
+venv/
+*.db
+*.log
+*.pdf
+*.docx
+*.tif
+*.jpg
+*.png
+data/
+models/
+notebooks/
