@@ -8,7 +8,9 @@ ENV PYTHONUNBUFFERED=1
 # Set working directory
 WORKDIR /app
 
-# Copy all project files (including models)
+# copies the model from OneDrive (using the symlink)
+COPY models /app/models
+# Copy all project files (models folder is not in the git repo)
 COPY . /app
 
 # Install system dependencies
@@ -19,6 +21,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
+COPY requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 

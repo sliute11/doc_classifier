@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: doc-classifier
+  labels:
+    app: doc-classifier
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: doc-classifier
+  template:
+    metadata:
+      labels:
+        app: doc-classifier
+    spec:
+      containers:
+        - name: doc-classifier
+          image: doc-classifier:latest   # this matches your nerdctl image tag
+          imagePullPolicy: IfNotPresent # added this line now
+          ports:
+            - containerPort: 8000
+          env:
+            - name: PYTHONDONTWRITEBYTECODE
+              value: "1"
+            - name: PYTHONUNBUFFERED
+              value: "1"
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
