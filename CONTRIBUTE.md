@@ -14,13 +14,13 @@ Welcome to the team! This guide outlines how to contribute to the frontend for o
 | C | FastAPI Backend | Serve predictions + OCR with FastAPI |
 | D | Local Dev & Docs | Setup instructions & cross-platform testing |
 | E | QA & Docs | Testing + maintaining README |
-| YOU | Project Manager | GitHub board, PR reviews, coordination |
+| X | 'Project Manager' | GitHub board, PR reviews, coordination |
 
 ---
 
 ## 🔁 GitHub Workflow
 
-- **Branches**: `feature/<name>`, `fix/<name>`, `docs/<name>`
+- **Branches**: First create the branch `<name_of_your_assigned_issue>` ==> switch on the created branch ==> work on the created branch (IMPORTANT!)
 - **Pull Requests**: Always open PRs against `main` with 1 reviewer minimum
 - **Labels**: `frontend`, `backend`, `docs`, `qa`, `api`, `bug`, `enhancement`
 - **Project Board**: Use `To Do`, `In Progress`, `Review`, `Done`
