@@ -34,9 +34,13 @@ A machine learning pipeline that uses OCR and a RoBERTa-based model to classify 
 
 ## 📦 Setup
 
-If you want to use the pre-existing trained model:
-1. Download the `models/` folder and `data/` folder from [here](https://endava-my.sharepoint.com/:f:/r/personal/stefan_liute_endava_com/Documents/doc_classifier_extra?csf=1&web=1&e=qaiTWd)  
-2. Place them in the **root directory** of the project
+**STEP 0 - CRUCIAL:**
+- After you cloned the repo locally, **create a venv** in the root folder!
+
+*If you want to use the pre-existing trained model* (NO NEED FOR NOW):
+*1. Download the `models/` folder and `data/` folder from [here](https://endava-my.sharepoint.com/:f:/r/personal/stefan_liute_endava_com/Documents/doc_classifier_extra?csf=1&web=1&e=qaiTWd)*
+*2. Place them in the **root directory** of the project*
+*3. If you stored them in the root_directory, make sure they are ignored by git (.gitignore file)*
 
 ---
 
