@@ -43,6 +43,11 @@ A machine learning pipeline that uses OCR and a RoBERTa-based model to classify 
 *3. If you stored them in the root_directory, make sure they are ignored by git (.gitignore file)*
 
 ---
+## Download Tesseract Windows [HERE](https://github.com/tesseract-ocr/tesseract/releases/download/5.5.0/tesseract-ocr-w64-setup-5.5.0.20241111.exe)
+- install it in C:/Endava/EndevLocal
+- edit environment variables (path)
+- ![image](https://github.com/user-attachments/assets/cd55f593-3c1b-4b43-a1f1-7a8642f4a9a7)
+
 
 ## 🔧 Running the App Locally
 
