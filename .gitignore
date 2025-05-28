@@ -180,4 +180,4 @@ doc-classifier.tar
 models/
 
 # ignore constants
-constants.py
+/constants.py
