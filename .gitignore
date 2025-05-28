@@ -178,3 +178,6 @@ doc-classifier.tar
 
 # models folder
 models/
+
+# ignore constants
+constants.py
