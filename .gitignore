@@ -176,8 +176,11 @@ cython_debug/
 # not useful stuff
 doc-classifier.tar
 
-# models folder
+# models, data folders
 models/
+data/
+data/images/
+images/
 
 # ignore constants
 /constants.py
