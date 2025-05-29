@@ -1,37 +1,46 @@
 import { useState, useRef } from "react";
 
 function UploadPage() {
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFiles, setSelectedFiles] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
 
-  const handleFile = (file) => {
-    if (!file) return;
-
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
     const validExtensions = [".pdf", ".jpg", ".jpeg", ".png", ".tif"];
-    const fileName = file.name.toLowerCase();
-    const fileExtension = fileName.substring(fileName.lastIndexOf("."));
 
-    if (!validExtensions.includes(fileExtension)) {
+    const validFiles = files.filter(file => {
+      const ext = file.name.toLowerCase().slice(file.name.lastIndexOf("."));
+      return validExtensions.includes(ext);
+    });
+
+    if (validFiles.length === 0) {
       alert("Only PDF, JPG, TIF, and PNG files are allowed.");
       return;
     }
 
-    setSelectedFile(file);
-  };
-
-
-  const handleFileChange = (e) => {
-    handleFile(e.target.files[0]);
+    setSelectedFiles(validFiles);
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
     setIsDragging(false);
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      handleFile(e.dataTransfer.files[0]);
-      e.dataTransfer.clearData();
+
+    const files = Array.from(e.dataTransfer.files);
+    const validExtensions = [".pdf", ".jpg", ".jpeg", ".png", ".tif"];
+
+    const validFiles = files.filter(file => {
+      const ext = file.name.toLowerCase().slice(file.name.lastIndexOf("."));
+      return validExtensions.includes(ext);
+    });
+
+    if (validFiles.length === 0) {
+      alert("Only PDF, JPG, TIF, and PNG files are allowed.");
+      return;
     }
+
+    setSelectedFiles(validFiles);
+    e.dataTransfer.clearData();
   };
 
   return (
@@ -51,24 +60,27 @@ function UploadPage() {
           ${isDragging ? "border-blue-500 bg-blue-50" : "border-dashed border-gray-400 bg-white"}`}
       >
         <p className="text-gray-600">
-          Drag & drop a PDF or image here,<br />or click to browse.
+          Drag & drop PDF or image files here,<br />or click to browse.
         </p>
       </div>
 
       {/* Hidden File Input */}
       <input
         type="file"
+        multiple
         ref={fileInputRef}
         onChange={handleFileChange}
-        accept=".pdf,.jpg,.jpeg,.png, .tif"
+        accept=".pdf,.jpg,.jpeg,.png,.tif"
         className="hidden"
       />
 
       {/* File Preview */}
-      {selectedFile && (
-        <p className="mt-4 text-sm text-gray-700">
-          Selected: <strong>{selectedFile.name}</strong>
-        </p>
+      {selectedFiles.length > 0 && (
+        <ul className="mt-4 text-sm text-gray-700 space-y-1">
+          {selectedFiles.map((file, idx) => (
+            <li key={idx}><strong>{file.name}</strong></li>
+          ))}
+        </ul>
       )}
     </div>
   );
