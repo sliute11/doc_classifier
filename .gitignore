@@ -184,3 +184,17 @@ images/
 
 # ignore constants
 /constants.py
+
+# Frontend build output
+/frontend/dist/
+/frontend/node_modules/
+/frontend/.vite/
+
+# Vite/React/Tailwind cache and logs
+frontend/.next/
+frontend/.cache/
+frontend/.eslintcache
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
