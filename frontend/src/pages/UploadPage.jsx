@@ -1,11 +1,48 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import OcrTextViewer from "../components/OcrTextViewer";
+import PredictionLabel from "../components/PredictionLabel";
+
 import { useState, useRef } from "react";
 
 function UploadPage() {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
+  
+  const resetUpload = () => {
+  setSelectedFiles([]);
+  setPredictedType("Invoice"); // Or "" if you'd prefer blank
+  setOcrResult("");
+};
+
+  const [predictedType, setPredictedType] = useState("Invoice");
+  const [ocrResult, setOcrResult] = useState(`This is a simulated OCR output.
+    It will eventually be replaced by real extracted text from the document you upload.
+    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+    zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
+    It will eventually be replaced by real extracted text from the document you upload.
+    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+    zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
+    It will eventually be replaced by real extracted text from the document you upload.
+    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+    zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
+    It will eventually be replaced by real extracted text from the document you upload.
+    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+    zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
+    It will eventually be replaced by real extracted text from the document you upload.
+    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+    zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
+    It will eventually be replaced by real extracted text from the document you upload.
+    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+    zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
+    It will eventually be replaced by real extracted text from the document you upload.
+    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+    zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
+    It will eventually be replaced by real extracted text from the document you upload.
+    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+    zzzzzzzzzzzzzzzzzzzzzzzzzzz`);
+
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
@@ -50,7 +87,7 @@ function UploadPage() {
       <Header />
 
       <main className="flex flex-col items-center justify-center flex-grow px-4 py-8">
-        <div className="w-full max-w-2xl bg-gray-900 border border-cyan-700 shadow-lg p-6 rounded-lg space-y-6">
+        <div className="w-full max-w-4xl bg-gray-900 border border-cyan-700 shadow-lg p-6 rounded-lg space-y-6">
 
           <h2 className="text-2xl font-bold text-cyan-400 tracking-widest text-center uppercase">
             Upload Documents
@@ -94,12 +131,28 @@ function UploadPage() {
             </ul>
           )}
 
-          {/* Placeholder Result Block */}
-          {selectedFiles.length > 0 && (
-            <div className="mt-6 p-4 border border-fuchsia-600 rounded bg-gray-800 text-sm text-fuchsia-300 shadow-inner text-center">
-              <p className="italic">OCR and document type results will appear here after submission.</p>
+        {/* Placeholder Result Block */}
+
+        {selectedFiles.length > 0 && (
+        <div className="mt-6 p-4 border border-fuchsia-600 rounded bg-gray-800 text-fuchsia-300 shadow-inner space-y-6">
+            <PredictionLabel label={predictedType} />
+
+            <div className="w-full">
+            <h3 className="text-lg font-bold text-fuchsia-400 uppercase mb-2">Extracted OCR Text</h3>
+            <OcrTextViewer text={ocrResult} />
             </div>
-          )}
+
+            {/* ✅ Try Another File Button */}
+            <div className="text-center">
+            <button
+                onClick={resetUpload}
+                className="mt-4 px-4 py-2 bg-fuchsia-700 hover:bg-fuchsia-600 text-white font-semibold rounded transition duration-200"
+            >
+                Try Another File
+            </button>
+            </div>
+        </div>
+        )}
 
         </div>
       </main>
