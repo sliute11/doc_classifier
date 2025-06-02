@@ -8,6 +8,9 @@ function UploadPage() {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
   const [results, setResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
 
   const resetUpload = () => {
     setSelectedFiles([]);
@@ -17,15 +20,22 @@ function UploadPage() {
   const handleSubmit = async () => {
     if (selectedFiles.length === 0) return;
 
+    setIsLoading(true);
+    setError(null);
+
     try {
       const predictions = await uploadAuto(selectedFiles);
       console.log("API Response:", predictions);
       setResults(predictions);
     } catch (err) {
       console.error("Upload failed:", err);
-      setResults([{ error: "Upload failed." }]);
+      setResults([]);
+      setError("Something went wrong while uploading the file(s).");
+    } finally {
+      setIsLoading(false);
     }
   };
+
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
@@ -105,6 +115,20 @@ function UploadPage() {
             className="hidden"
           />
 
+          {/* Loading Indicator */}
+          {isLoading && (
+            <div className="text-center text-cyan-300 font-semibold">
+              Processing your file(s)... Please wait.
+            </div>
+          )}
+
+          {/* Error Message */}
+          {error && (
+            <div className="text-center text-red-400 font-semibold">
+              {error}
+            </div>
+          )}
+
           {/* File List */}
           {selectedFiles.length > 0 && (
             <ul className="list-decimal list-inside text-sm text-lime-400 space-y-1 text-center">
@@ -150,9 +174,10 @@ function UploadPage() {
             <div className="text-center space-y-2">
               <button
                 onClick={handleSubmit}
-                className="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white font-semibold rounded transition duration-200"
+                disabled={isLoading}
+                className={`px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white font-semibold rounded transition duration-200 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
-                Submit File{selectedFiles.length > 1 ? "s" : ""}
+                {isLoading ? 'Submitting...' : `Submit File${selectedFiles.length > 1 ? 's' : ''}`}
               </button>
               <button
                 onClick={resetUpload}
