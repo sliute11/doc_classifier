@@ -1,47 +1,74 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import OcrTextViewer from "../components/OcrTextViewer";
+// import OcrTextViewer from "../components/OcrTextViewer";
+import FilenameDisplay from "../components/FilenameDisplay";
+import ConfidenceDisplay from "../components/ConfidenceDisplay";
 import PredictionLabel from "../components/PredictionLabel";
-
+import { uploadDocument } from "../services/api";
 import { useState, useRef } from "react";
 
 function UploadPage() {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
+  const [filename, setFilename] = useState("");
+  const [confidence, setConfidence] = useState(null);
+
   
   const resetUpload = () => {
   setSelectedFiles([]);
   setPredictedType("Invoice"); // Or "" if you'd prefer blank
-  setOcrResult("");
-};
+  // setOcrResult("");
+  };
+
+  // adding handler sumbit
+  const handleSubmit = async () => {
+    if (selectedFiles.length === 0) return;
+
+    try {
+      const response = await uploadDocument(selectedFiles[0]);
+      console.log("API Response:", response);
+
+      setPredictedType(response.predicted_type || response.label || "Unknown");
+      // setOcrResult(response.ocr_text || "No OCR text found.");
+      setFilename(response.filename || "");
+      setConfidence(response.confidence || null);
+    } catch (err) {
+      console.error("Upload failed:", err);
+      setPredictedType("Error");
+      setOcrResult("An error occurred while processing the document.");
+      setFilename("");
+      setConfidence(null);
+    }
+  };
+
 
   const [predictedType, setPredictedType] = useState("Invoice");
-  const [ocrResult, setOcrResult] = useState(`This is a simulated OCR output.
-    It will eventually be replaced by real extracted text from the document you upload.
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
-    It will eventually be replaced by real extracted text from the document you upload.
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
-    It will eventually be replaced by real extracted text from the document you upload.
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
-    It will eventually be replaced by real extracted text from the document you upload.
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
-    It will eventually be replaced by real extracted text from the document you upload.
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
-    It will eventually be replaced by real extracted text from the document you upload.
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
-    It will eventually be replaced by real extracted text from the document you upload.
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
-    It will eventually be replaced by real extracted text from the document you upload.
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-    zzzzzzzzzzzzzzzzzzzzzzzzzzz`);
+  // const [ocrResult, setOcrResult] = useState(`This is a simulated OCR output.
+  //   It will eventually be replaced by real extracted text from the document you upload.
+  //   zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+  //   zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
+  //   It will eventually be replaced by real extracted text from the document you upload.
+  //   zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+  //   zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
+  //   It will eventually be replaced by real extracted text from the document you upload.
+  //   zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+  //   zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
+  //   It will eventually be replaced by real extracted text from the document you upload.
+  //   zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+  //   zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
+  //   It will eventually be replaced by real extracted text from the document you upload.
+  //   zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+  //   zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
+  //   It will eventually be replaced by real extracted text from the document you upload.
+  //   zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+  //   zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
+  //   It will eventually be replaced by real extracted text from the document you upload.
+  //   zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+  //   zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
+  //   It will eventually be replaced by real extracted text from the document you upload.
+  //   zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+  //   zzzzzzzzzzzzzzzzzzzzzzzzzzz`);
 
 
   const handleFileChange = (e) => {
@@ -137,10 +164,30 @@ function UploadPage() {
         <div className="mt-6 p-4 border border-fuchsia-600 rounded bg-gray-800 text-fuchsia-300 shadow-inner space-y-6">
             <PredictionLabel label={predictedType} />
 
-            <div className="w-full">
+            <div className="text-center space-y-1">
+              <FilenameDisplay filename={filename} />
+              <ConfidenceDisplay confidence={confidence} />
+            </div>
+
+
+            {/* EXTRACTED OCR TEXT (TO BE ADDED LATER IF WE WANT IT) - OR maybe we could add an option to save it locally. */}
+            {/* <div className="w-full">
             <h3 className="text-lg font-bold text-fuchsia-400 uppercase mb-2">Extracted OCR Text</h3>
             <OcrTextViewer text={ocrResult} />
-            </div>
+            </div> */}
+
+        {/* Submit button placeholder */}
+        {selectedFiles.length > 0 && (
+          <div className="text-center">
+            <button
+              onClick={handleSubmit}
+              className="mt-4 px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white font-semibold rounded transition duration-200"
+            >
+              Submit File
+            </button>
+          </div>
+        )}
+
 
             {/* ✅ Try Another File Button */}
             <div className="text-center">
