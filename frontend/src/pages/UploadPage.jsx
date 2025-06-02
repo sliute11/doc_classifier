@@ -1,48 +1,31 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import OcrTextViewer from "../components/OcrTextViewer";
-import PredictionLabel from "../components/PredictionLabel";
-
 import { useState, useRef } from "react";
+import { uploadAuto } from "../services/api";
 
 function UploadPage() {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
-  
+  const [results, setResults] = useState([]);
+
   const resetUpload = () => {
-  setSelectedFiles([]);
-  setPredictedType("Invoice"); // Or "" if you'd prefer blank
-  setOcrResult("");
-};
+    setSelectedFiles([]);
+    setResults([]);
+  };
 
-  const [predictedType, setPredictedType] = useState("Invoice");
-  const [ocrResult, setOcrResult] = useState(`This is a simulated OCR output.
-    It will eventually be replaced by real extracted text from the document you upload.
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
-    It will eventually be replaced by real extracted text from the document you upload.
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
-    It will eventually be replaced by real extracted text from the document you upload.
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
-    It will eventually be replaced by real extracted text from the document you upload.
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
-    It will eventually be replaced by real extracted text from the document you upload.
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
-    It will eventually be replaced by real extracted text from the document you upload.
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
-    It will eventually be replaced by real extracted text from the document you upload.
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzThis is a simulated OCR output.
-    It will eventually be replaced by real extracted text from the document you upload.
-    zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-    zzzzzzzzzzzzzzzzzzzzzzzzzzz`);
+  const handleSubmit = async () => {
+    if (selectedFiles.length === 0) return;
 
+    try {
+      const predictions = await uploadAuto(selectedFiles);
+      console.log("API Response:", predictions);
+      setResults(predictions);
+    } catch (err) {
+      console.error("Upload failed:", err);
+      setResults([{ error: "Upload failed." }]);
+    }
+  };
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
@@ -59,6 +42,7 @@ function UploadPage() {
     }
 
     setSelectedFiles(validFiles);
+    setResults([]);
   };
 
   const handleDrop = (e) => {
@@ -79,6 +63,7 @@ function UploadPage() {
     }
 
     setSelectedFiles(validFiles);
+    setResults([]);
     e.dataTransfer.clearData();
   };
 
@@ -131,28 +116,52 @@ function UploadPage() {
             </ul>
           )}
 
-        {/* Placeholder Result Block */}
+          {/* Prediction Results */}
+          {results.length > 0 && (
+            <div className="mt-6 p-4 border border-fuchsia-600 rounded bg-gray-800 text-fuchsia-300 shadow-inner space-y-4">
+              <h3 className="text-lg font-bold text-fuchsia-400 uppercase text-center">Prediction Results</h3>
+              {results.map((res, idx) => (
+                <div key={idx} className="p-3 border border-fuchsia-700 rounded text-sm bg-gray-900">
+                  {res.error ? (
+                    <p className="text-red-400">Error for {res.filename || `file ${idx + 1}`}: {res.error}</p>
+                  ) : (
+                    <>
+                      <p><strong>Filename:</strong> {res.filename}</p>
+                      <p><strong>Label:</strong> {res.label}</p>
+                      <p><strong>Confidence:</strong> {res.confidence}</p>
+                    </>
+                  )}
+                </div>
+              ))}
 
-        {selectedFiles.length > 0 && (
-        <div className="mt-6 p-4 border border-fuchsia-600 rounded bg-gray-800 text-fuchsia-300 shadow-inner space-y-6">
-            <PredictionLabel label={predictedType} />
-
-            <div className="w-full">
-            <h3 className="text-lg font-bold text-fuchsia-400 uppercase mb-2">Extracted OCR Text</h3>
-            <OcrTextViewer text={ocrResult} />
+              <div className="text-center">
+                <button
+                  onClick={resetUpload}
+                  className="mt-4 px-4 py-2 bg-fuchsia-700 hover:bg-fuchsia-600 text-white font-semibold rounded transition duration-200"
+                >
+                  Try Another File
+                </button>
+              </div>
             </div>
+          )}
 
-            {/* ✅ Try Another File Button */}
-            <div className="text-center">
-            <button
+          {/* Submit + Reset Buttons */}
+          {selectedFiles.length > 0 && results.length === 0 && (
+            <div className="text-center space-y-2">
+              <button
+                onClick={handleSubmit}
+                className="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white font-semibold rounded transition duration-200"
+              >
+                Submit File{selectedFiles.length > 1 ? "s" : ""}
+              </button>
+              <button
                 onClick={resetUpload}
-                className="mt-4 px-4 py-2 bg-fuchsia-700 hover:bg-fuchsia-600 text-white font-semibold rounded transition duration-200"
-            >
+                className="ml-4 px-4 py-2 bg-fuchsia-700 hover:bg-fuchsia-600 text-white font-semibold rounded transition duration-200"
+              >
                 Try Another File
-            </button>
+              </button>
             </div>
-        </div>
-        )}
+          )}
 
         </div>
       </main>
