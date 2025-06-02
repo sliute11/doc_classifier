@@ -115,7 +115,7 @@ Welcome to the team! This guide outlines how to contribute to the frontend for o
 
 ## ✅ Final Checklist for Handoff
 
-- [ ] Frontend connects to FastAPI successfully
-- [ ] Upload, OCR, and prediction flow complete
+- [x] Frontend connects to FastAPI successfully
+- [x] Upload, OCR, and prediction flow complete
 - [ ] Docs are updated and clear
 - [ ] All project board cards moved to `Done`
