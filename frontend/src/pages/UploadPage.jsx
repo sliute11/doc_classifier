@@ -10,6 +10,8 @@ function UploadPage() {
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [validationError, setValidationError] = useState(null);
+
 
 
   const resetUpload = () => {
@@ -18,7 +20,7 @@ function UploadPage() {
   };
 
   const handleSubmit = async () => {
-    if (selectedFiles.length === 0) return;
+    if (selectedFiles.length === 0 || validationError) return;
 
     setIsLoading(true);
     setError(null);
@@ -39,20 +41,26 @@ function UploadPage() {
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
     const validExtensions = [".pdf", ".jpg", ".jpeg", ".png", ".tif"];
+    const maxSizeMB = 10;
 
     const validFiles = files.filter(file => {
       const ext = file.name.toLowerCase().slice(file.name.lastIndexOf("."));
-      return validExtensions.includes(ext);
+      const isValidExt = validExtensions.includes(ext);
+      const isNotEmpty = file.size > 0;
+      const isUnderLimit = file.size <= maxSizeMB * 1024 * 1024;
+      return isValidExt && isNotEmpty && isUnderLimit;
     });
 
     if (validFiles.length === 0) {
-      alert("Only PDF, JPG, JPEG, PNG, and TIF files are allowed.");
+      setValidationError("Please upload valid PDF or image files (max 10MB).");
       return;
     }
 
+    setValidationError(null);
     setSelectedFiles(validFiles);
     setResults([]);
   };
+
 
   const handleDrop = (e) => {
     e.preventDefault();
@@ -139,6 +147,13 @@ function UploadPage() {
                 </li>
               ))}
             </ul>
+          )}
+
+          {/* Display validation error | This makes the validation error visible to the user without using alert()*/}
+          {validationError && (
+            <div className="text-center text-red-400 font-semibold">
+              {validationError}
+            </div>
           )}
 
           {/* Prediction Results */}
