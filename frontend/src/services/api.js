@@ -7,10 +7,16 @@ const api = axios.create({
   }
 });
 
-export const uploadDocument = async (file) => {
+export const uploadAuto = async (files) => {
   const formData = new FormData();
-  formData.append("file", file);
 
-  const response = await api.post("/predict", formData);
-  return response.data;
+  if (files.length === 1) {
+    formData.append("file", files[0]);
+    const response = await api.post("/predict", formData);
+    return [response.data];  // Wrap in array for consistency
+  } else {
+    files.forEach(file => formData.append("files", file));
+    const response = await api.post("/predict_batch", formData);
+    return response.data.predictions;
+  }
 };
