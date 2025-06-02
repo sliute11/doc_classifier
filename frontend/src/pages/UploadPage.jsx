@@ -20,7 +20,7 @@ function UploadPage() {
   };
 
   const handleSubmit = async () => {
-    if (selectedFiles.length === 0) return;
+    if (selectedFiles.length === 0 || validationError) return;
 
     setIsLoading(true);
     setError(null);
@@ -147,6 +147,13 @@ function UploadPage() {
                 </li>
               ))}
             </ul>
+          )}
+
+          {/* Display validation error | This makes the validation error visible to the user without using alert()*/}
+          {validationError && (
+            <div className="text-center text-red-400 font-semibold">
+              {validationError}
+            </div>
           )}
 
           {/* Prediction Results */}
