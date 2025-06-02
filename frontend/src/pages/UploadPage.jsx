@@ -36,7 +36,6 @@ function UploadPage() {
     }
   };
 
-
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
     const validExtensions = [".pdf", ".jpg", ".jpeg", ".png", ".tif"];
@@ -117,10 +116,12 @@ function UploadPage() {
 
           {/* Loading Indicator */}
           {isLoading && (
-            <div className="text-center text-cyan-300 font-semibold">
-              Processing your file(s)... Please wait.
+            <div className="flex flex-col items-center justify-center space-y-2">
+              <div className="h-8 w-8 animate-spin rounded-full border-4 border-solid border-cyan-400 border-t-transparent"></div>
+              <p className="text-cyan-300 font-semibold">Processing your file(s)...</p>
             </div>
           )}
+
 
           {/* Error Message */}
           {error && (
