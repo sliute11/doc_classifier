@@ -175,7 +175,7 @@ cython_debug/
 
 # not useful stuff
 doc-classifier.tar
-
+__init__.py
 # models, data folders
 models/
 data/

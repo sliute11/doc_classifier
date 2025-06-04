@@ -4,8 +4,9 @@ from transformers import RobertaTokenizer, RobertaForSequenceClassification
 import pickle
 import os
 
-MODEL_PATH = r"C:\Users\sliute\OneDrive - ENDAVA\doc_classifier_extra\models\roberta_model"
-ENCODER_PATH = r"C:\Users\sliute\OneDrive - ENDAVA\doc_classifier_extra\models\label_encoder.pkl"
+import constants
+MODEL_PATH = constants.MODEL_PATH
+ENCODER_PATH = constants.LABEL_ENCODER
 
 # Load once
 model = RobertaForSequenceClassification.from_pretrained(MODEL_PATH)

@@ -12,7 +12,7 @@ import constants
 
 # --- Configuration ---
 MODEL_PATH = constants.MODEL_PATH
-LABEL_ENCODER_PATH = constants.LABEL_ENCODER_PATH
+LABEL_ENCODER_PATH = constants.LABEL_ENCODER
 FILES_DIR = constants.FILES_DIR
 
 SUPPORTED_EXTENSIONS = constants.SUPPORTED_EXTENSIONS

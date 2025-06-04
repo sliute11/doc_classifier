@@ -4,22 +4,23 @@ from sklearn.preprocessing import LabelEncoder
 import pickle
 import os
 from tqdm import tqdm
+import constants
 
-# Paths
-RAW_PATH = r"C:\Users\lfratila\OneDrive - ENDAVA\Projects\Document-Classifier\doc_classifier\data\outputs-sampled.csv"
-PROCESSED_PATH = r"C:\Users\lfratila\OneDrive - ENDAVA\Projects\Document-Classifier\doc_classifier\data\processed"
+# Input and output paths
+RAW_PATH = constants.EXTRACTED_OCR_CLEANED  # <-- Add this to constants.py
+PROCESSED_PATH = constants.PROCESSED_PATH   # already defined
 os.makedirs(PROCESSED_PATH, exist_ok=True)
 
-# Load and clean
 print("📦 Loading and cleaning data...")
-df = pd.read_csv(RAW_PATH)[['text', 'label']].dropna()
+df = pd.read_csv(RAW_PATH)[['text_cleaned', 'label']].dropna()
+df = df.rename(columns={"text_cleaned": "text"})
 
 print(f"🔢 Total samples: {len(df)}")
 
+print("🔠 Encoding labels...")
 label_encoder = LabelEncoder()
 df['label_id'] = label_encoder.fit_transform(df['label'])
 
-# Split
 print("✂️ Splitting train/test data...")
 train_texts, test_texts, train_labels, test_labels = train_test_split(
     df['text'].tolist(),
@@ -29,7 +30,6 @@ train_texts, test_texts, train_labels, test_labels = train_test_split(
     stratify=df['label_id']
 )
 
-# Save splits and label encoder with tqdm
 print("💾 Saving processed files...")
 for name, obj in tqdm([
     ("train_texts.pkl", train_texts),
@@ -42,3 +42,4 @@ for name, obj in tqdm([
         pickle.dump(obj, f)
 
 print("✅ Data preprocessing complete and saved.")
+print(f"📂 Processed files saved to: {PROCESSED_PATH}")

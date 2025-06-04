@@ -8,8 +8,8 @@ import os
 import constants
 
 # ==== CONFIG ====
-INPUT_CSV = constants.INPUT_CSV
-OUTPUT_CSV = constants.OUTPUT_CSV
+INPUT_CSV = constants.FULL_PROCESSED_DATASET  # or constants.SAMPLE_DATASET if you want to use the sampled data
+OUTPUT_CSV = constants.OUTPUT_CSV if hasattr(constants, "OUTPUT_CSV") else "e:/training/doc_classifier/data/predictions.csv"
 MODEL_PATH = constants.MODEL_PATH
 ENCODER_PATH = constants.ENCODER_PATH
 
@@ -20,7 +20,7 @@ MAX_LEN = 512
 df = pd.read_csv(INPUT_CSV)
 has_labels = "label" in df.columns
 
-texts = df["text"].dropna().tolist()
+texts = df["text_cleaned"].dropna().tolist()
 true_labels = df["label"].tolist() if has_labels else None
 
 # ==== Load Model and Tokenizer ====
