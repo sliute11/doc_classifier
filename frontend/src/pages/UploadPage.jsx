@@ -2,6 +2,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useState, useRef } from "react";
 import { uploadAuto } from "../services/api";
+import PredictionAccuracy from "../components/PredictionAccuracy";
 
 function UploadPage() {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -155,6 +156,9 @@ function UploadPage() {
               {validationError}
             </div>
           )}
+
+          {/* Prediction Accuracy */}
+          <PredictionAccuracy results={results} />
 
           {/* Prediction Results */}
           {results.length > 0 && (
