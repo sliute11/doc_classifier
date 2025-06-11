@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Path to your cleaned dataset
-CLEANED_CSV = r"E:\training\doc_classifier\data\Cleaned_OCR_Dataset.csv" 
+CLEANED_CSV = r"E:/training/doc_classifier/data/Cleaned_OCR_Dataset.csv" 
 
 # Load data
 df = pd.read_csv(CLEANED_CSV)

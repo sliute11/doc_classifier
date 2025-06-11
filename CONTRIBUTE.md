@@ -117,5 +117,5 @@ Welcome to the team! This guide outlines how to contribute to the frontend for o
 
 - [x] Frontend connects to FastAPI successfully
 - [x] Upload, OCR, and prediction flow complete
-- [ ] Docs are updated and clear
+- [x] Docs are updated and clear
 - [ ] All project board cards moved to `Done`
