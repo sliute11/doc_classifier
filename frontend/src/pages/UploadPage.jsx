@@ -41,8 +41,8 @@ function UploadPage() {
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
-    const validExtensions = [".pdf", ".jpg", ".jpeg", ".png", ".tif"];
-    const maxSizeMB = 10;
+    const validExtensions = [".pdf", ".docx", ".txt", ".png", ".jpg", ".jpeg", ".tif", ".tiff"];
+    const maxSizeMB = 50;
 
     const validFiles = files.filter(file => {
       const ext = file.name.toLowerCase().slice(file.name.lastIndexOf("."));
@@ -53,7 +53,7 @@ function UploadPage() {
     });
 
     if (validFiles.length === 0) {
-      setValidationError("Please upload valid PDF or image files (max 10MB).");
+      setValidationError("Please upload valid document files (max 50MB).");
       return;
     }
 
@@ -68,7 +68,7 @@ function UploadPage() {
     setIsDragging(false);
 
     const files = Array.from(e.dataTransfer.files);
-    const validExtensions = [".pdf", ".jpg", ".jpeg", ".png", ".tif"];
+    const validExtensions = [".pdf", ".docx", ".txt", ".png", ".jpg", ".jpeg", ".tif", ".tiff"];
 
     const validFiles = files.filter(file => {
       const ext = file.name.toLowerCase().slice(file.name.lastIndexOf("."));
@@ -76,7 +76,7 @@ function UploadPage() {
     });
 
     if (validFiles.length === 0) {
-      alert("Only PDF, JPG, JPEG, PNG, and TIF files are allowed.");
+      alert("Only PDF, DOCX, TXT, JPG, JPEG, PNG, and TIF(F) files are allowed.");
       return;
     }
 
@@ -109,7 +109,7 @@ function UploadPage() {
               ${isDragging ? "border-cyan-400 bg-cyan-950/40 shadow-cyan-500/30" : "border-cyan-700 border-dashed bg-gray-800 hover:shadow-cyan-500/20"}`}
           >
             <p className="text-cyan-200">
-              Drag & drop PDF or image files here,<br />or click to browse.
+              Drag & drop the document(s) here,<br />or click to browse.
             </p>
           </div>
 
@@ -119,7 +119,7 @@ function UploadPage() {
             multiple
             ref={fileInputRef}
             onChange={handleFileChange}
-            accept=".pdf,.jpg,.jpeg,.png,.tif"
+            accept=".pdf,.jpg,.jpeg,.png,.tif, .tiff, .docx, .txt"
             className="hidden"
           />
 
