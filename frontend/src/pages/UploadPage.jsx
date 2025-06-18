@@ -44,6 +44,15 @@ function UploadPage() {
     const validExtensions = [".pdf", ".docx", ".txt", ".png", ".jpg", ".jpeg", ".tif", ".tiff"];
     const maxSizeMB = 50;
 
+    // Alert if any file has an invalid extension
+    const hasInvalidType = files.some(file => {
+      const ext = file.name.toLowerCase().slice(file.name.lastIndexOf("."));
+      return !validExtensions.includes(ext);
+    });
+    if (hasInvalidType) {
+      alert("Only PDF, DOCX, TXT, JPG, JPEG, PNG, and TIF(F) files are allowed.");
+    }
+
     const validFiles = files.filter(file => {
       const ext = file.name.toLowerCase().slice(file.name.lastIndexOf("."));
       const isValidExt = validExtensions.includes(ext);
@@ -69,17 +78,31 @@ function UploadPage() {
 
     const files = Array.from(e.dataTransfer.files);
     const validExtensions = [".pdf", ".docx", ".txt", ".png", ".jpg", ".jpeg", ".tif", ".tiff"];
+    const maxSizeMB = 50;
+
+    // Alert if any file has an invalid extension
+    const hasInvalidType = files.some(file => {
+      const ext = file.name.toLowerCase().slice(file.name.lastIndexOf("."));
+      return !validExtensions.includes(ext);
+    });
+    if (hasInvalidType) {
+      alert("Only PDF, DOCX, TXT, JPG, JPEG, PNG, and TIF(F) files are allowed.");
+    }
 
     const validFiles = files.filter(file => {
       const ext = file.name.toLowerCase().slice(file.name.lastIndexOf("."));
-      return validExtensions.includes(ext);
+      const isValidExt = validExtensions.includes(ext);
+      const isNotEmpty = file.size > 0;
+      const isUnderLimit = file.size <= maxSizeMB * 1024 * 1024;
+      return isValidExt && isNotEmpty && isUnderLimit;
     });
 
     if (validFiles.length === 0) {
-      alert("Only PDF, DOCX, TXT, JPG, JPEG, PNG, and TIF(F) files are allowed.");
+      setValidationError("Please upload valid document files (max 50MB).");
       return;
     }
 
+    setValidationError(null);
     setSelectedFiles(validFiles);
     setResults([]);
     e.dataTransfer.clearData();
@@ -119,7 +142,7 @@ function UploadPage() {
             multiple
             ref={fileInputRef}
             onChange={handleFileChange}
-            accept=".pdf,.jpg,.jpeg,.png,.tif, .tiff, .docx, .txt"
+            accept=".pdf,.jpg,.jpeg,.png,.tif,.tiff,.docx,.txt"
             className="hidden"
           />
 
