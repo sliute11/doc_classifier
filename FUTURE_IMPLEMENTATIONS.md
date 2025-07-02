@@ -1,3 +1,7 @@
+issue 1 - description of the document (what's about)
+issue 2 - doc classifier supports romanian
+issue 3 - containerize the project
+------------------------------------------------------------------------------------------------
 Here's a comprehensive summary of all document classification models we've discussed, including dependencies, CUDA support, and alignment with your current Python 3.10.0 venv.
 
 📚 Summary of Document Classification Models
