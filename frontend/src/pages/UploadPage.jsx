@@ -2,6 +2,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useState, useRef } from "react";
 import { uploadAuto } from "../services/api";
+import PredictionAccuracy from "../components/PredictionAccuracy";
 
 function UploadPage() {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -40,8 +41,17 @@ function UploadPage() {
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
-    const validExtensions = [".pdf", ".jpg", ".jpeg", ".png", ".tif"];
-    const maxSizeMB = 10;
+    const validExtensions = [".pdf", ".docx", ".txt", ".png", ".jpg", ".jpeg", ".tif", ".tiff"];
+    const maxSizeMB = 50;
+
+    // Alert if any file has an invalid extension
+    const hasInvalidType = files.some(file => {
+      const ext = file.name.toLowerCase().slice(file.name.lastIndexOf("."));
+      return !validExtensions.includes(ext);
+    });
+    if (hasInvalidType) {
+      alert("Only PDF, DOCX, TXT, JPG, JPEG, PNG, and TIF(F) files are allowed.");
+    }
 
     const validFiles = files.filter(file => {
       const ext = file.name.toLowerCase().slice(file.name.lastIndexOf("."));
@@ -52,7 +62,7 @@ function UploadPage() {
     });
 
     if (validFiles.length === 0) {
-      setValidationError("Please upload valid PDF or image files (max 10MB).");
+      setValidationError("Please upload valid document files (max 50MB).");
       return;
     }
 
@@ -67,18 +77,32 @@ function UploadPage() {
     setIsDragging(false);
 
     const files = Array.from(e.dataTransfer.files);
-    const validExtensions = [".pdf", ".jpg", ".jpeg", ".png", ".tif"];
+    const validExtensions = [".pdf", ".docx", ".txt", ".png", ".jpg", ".jpeg", ".tif", ".tiff"];
+    const maxSizeMB = 50;
+
+    // Alert if any file has an invalid extension
+    const hasInvalidType = files.some(file => {
+      const ext = file.name.toLowerCase().slice(file.name.lastIndexOf("."));
+      return !validExtensions.includes(ext);
+    });
+    if (hasInvalidType) {
+      alert("Only PDF, DOCX, TXT, JPG, JPEG, PNG, and TIF(F) files are allowed.");
+    }
 
     const validFiles = files.filter(file => {
       const ext = file.name.toLowerCase().slice(file.name.lastIndexOf("."));
-      return validExtensions.includes(ext);
+      const isValidExt = validExtensions.includes(ext);
+      const isNotEmpty = file.size > 0;
+      const isUnderLimit = file.size <= maxSizeMB * 1024 * 1024;
+      return isValidExt && isNotEmpty && isUnderLimit;
     });
 
     if (validFiles.length === 0) {
-      alert("Only PDF, JPG, JPEG, PNG, and TIF files are allowed.");
+      setValidationError("Please upload valid document files (max 50MB).");
       return;
     }
 
+    setValidationError(null);
     setSelectedFiles(validFiles);
     setResults([]);
     e.dataTransfer.clearData();
@@ -108,7 +132,7 @@ function UploadPage() {
               ${isDragging ? "border-cyan-400 bg-cyan-950/40 shadow-cyan-500/30" : "border-cyan-700 border-dashed bg-gray-800 hover:shadow-cyan-500/20"}`}
           >
             <p className="text-cyan-200">
-              Drag & drop PDF or image files here,<br />or click to browse.
+              Drag & drop the document(s) here,<br />or click to browse.
             </p>
           </div>
 
@@ -118,7 +142,7 @@ function UploadPage() {
             multiple
             ref={fileInputRef}
             onChange={handleFileChange}
-            accept=".pdf,.jpg,.jpeg,.png,.tif"
+            accept=".pdf,.jpg,.jpeg,.png,.tif,.tiff,.docx,.txt"
             className="hidden"
           />
 
@@ -155,6 +179,9 @@ function UploadPage() {
               {validationError}
             </div>
           )}
+
+          {/* Prediction Accuracy */}
+          <PredictionAccuracy results={results} />
 
           {/* Prediction Results */}
           {results.length > 0 && (
