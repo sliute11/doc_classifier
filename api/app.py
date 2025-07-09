@@ -1,6 +1,7 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 import os
+from typing import List
 from tempfile import NamedTemporaryFile
 from predictors.predict_document_type import predict_document_type  # import your logic
 
@@ -8,11 +9,15 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # my Vite frontend
+    allow_origins=[
+        "http://localhost:3000",   # React served by NGINX in Docker
+        "http://localhost:5173"    # Optional: Vite dev mode (local dev)
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 
 @app.get("/")
