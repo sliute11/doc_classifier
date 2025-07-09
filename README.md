@@ -18,13 +18,16 @@ A machine learning pipeline that uses OCR and a RoBERTa-based model to classify 
 
 ```bash
 .
-├── api/                    # FastAPI backend
+├── api/                    # FastAPI backend with app.py
 ├── predictors/             # Model prediction logic
 ├── processing/             # OCR and data extraction
 ├── training/               # Preprocessing and model training
 ├── visualization/          # Data and model analysis scripts
+├── frontend/               # React + Vite UI
+├── models/                 # HuggingFace model + label encoder
+├── Dockerfile              # Backend Dockerfile
+├── docker-compose.yml      # Compose for full stack
 ├── requirements.txt        # Python dependencies
-├── frontend/               # React app (if scaffolded)
 ├── docs/                   # Dev setup instructions
 ├── CONTRIBUTE.md           # Team roles and issue assignments
 └── README.md               # This file
@@ -127,7 +130,52 @@ cd frontend
 npm install
 npm run dev
 ```
+## 🛠️ Running with Docker
 
+### 1. 📦 Prerequisites
+
+Docker or Rancher Desktop with Docker CLI enabled
+
+Clone this repo:
+
+git clone https://github.com/<your-username>/DOC_CLASSIFIER.git
+cd DOC_CLASSIFIER
+
+### 2. 🐳 Build and Start Containers
+
+docker compose up --build
+
+This will:
+
+- Build the FastAPI backend container
+
+- Build the React + Vite frontend, served via NGINX
+
+- Mount the models/ directory so the model and encoder are accessible
+
+- Start both services in a shared Docker network
+
+### 3. 🔗 Access the App
+
+  🌐 Frontend: http://localhost:3000
+
+  🧪 API Docs: http://localhost:8000/docs
+
+### 4. 🛠 Common Docker Commands
+
+#### Start containers
+docker compose up --build
+
+#### Stop containers
+docker compose down
+
+#### View container logs
+docker compose logs -f backend
+
+#### Access a container shell
+docker exec -it doc_classifier-backend-1 bash
+
+Once up, you can test API endpoints from Swagger UI or via frontend file upload
 ---
 
 ## 🧑‍💻 Contributing
